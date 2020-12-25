@@ -1,0 +1,24 @@
+//打包发布配置开始
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories.mavenDeployer {
+        def mavenDirPath = file('../../maven') // 本地存放地址
+        repository(url: "file://${mavenDirPath.absolutePath}")
+        pom.project {
+            groupId "com.hjq.libapp" // 包名
+            artifactId "libapp" // module的名字
+            version '1.0.0'// 版本号
+        }
+    }
+}
+
+// 源代码一起打包:gradlew uploadArchives
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.getSrcDirs()
+}
+artifacts {
+    archives androidSourcesJar
+}
+
